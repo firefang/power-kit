@@ -25,6 +25,7 @@
         <module>power-starter-mybatis-page</module>
         <module>power-starter-transaction</module>
         <module>power-starter-login</module>
+        <module>power-starter-permission</module>
     </modules>
 
     <properties>
