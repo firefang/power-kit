@@ -1,0 +1,7 @@
+spring:
+  datasource:
+    url: jdbc:h2:mem:power
+    schema: classpath:schema.sql
+mybatis:
+  type-aliases-package: io.github.firefang.power.test
+  mapper-locations: classpath:mapper/*.xml
