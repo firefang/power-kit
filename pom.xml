@@ -26,6 +26,7 @@
         <module>power-starter-transaction</module>
         <module>power-starter-login</module>
         <module>power-starter-permission</module>
+        <module>power-starter-webapp</module>
     </modules>
 
     <properties>
