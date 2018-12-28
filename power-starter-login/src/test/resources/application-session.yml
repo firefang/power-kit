@@ -1,0 +1,4 @@
+power:
+  login:
+    controller: true
+    type: session
