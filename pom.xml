@@ -22,6 +22,7 @@
         <module>power-starter-web</module>
         <module>power-starter-exception</module>
         <module>power-starter-mybatis</module>
+        <module>power-starter-mybatis-page</module>
     </modules>
 
     <properties>

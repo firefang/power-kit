@@ -1,0 +1,8 @@
+spring:
+  datasource:
+    url: jdbc:h2:mem:power_page
+    driverClassName: org.h2.Driver
+    schema: classpath:sql/schema.sql
+    data: classpath:sql/data.sql
+mybatis:
+  mapper-locations: classpath:mapper/*.xml
