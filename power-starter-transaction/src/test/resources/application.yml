@@ -1,0 +1,9 @@
+spring:
+  datasource:
+    url: jdbc:h2:mem:power_tx
+    driver-class-name: org.h2.Driver
+power:
+  transaction:
+    tx-bean-names: '*Srv'
+    read-only-transaction-attributes: 'fetch*'
+    required-transaction-attributes: 'test*'

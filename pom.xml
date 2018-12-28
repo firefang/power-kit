@@ -23,6 +23,7 @@
         <module>power-starter-exception</module>
         <module>power-starter-mybatis</module>
         <module>power-starter-mybatis-page</module>
+        <module>power-starter-transaction</module>
     </modules>
 
     <properties>
