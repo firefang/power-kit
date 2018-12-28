@@ -20,6 +20,7 @@
     <modules>
         <module>power-common</module>
         <module>power-starter-web</module>
+        <module>power-starter-exception</module>
     </modules>
 
     <properties>
