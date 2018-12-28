@@ -19,6 +19,7 @@
 
     <modules>
         <module>power-common</module>
+        <module>power-starter-web</module>
     </modules>
 
     <properties>
