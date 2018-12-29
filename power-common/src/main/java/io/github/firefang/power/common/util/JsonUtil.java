@@ -21,8 +21,8 @@ public abstract class JsonUtil {
     /**
      * Object to JSON
      * 
-     * @param object
-     * @return
+     * @param object 要序列化成JSON的对象
+     * @return JSON字符串
      */
     public static String stringify(Object object) {
         if (object == null) {
@@ -38,9 +38,9 @@ public abstract class JsonUtil {
     /**
      * JSON to Object
      * 
-     * @param json
-     * @param clazz
-     * @return
+     * @param json 要反序列化的JSON字符串
+     * @param clazz 反序列化类型
+     * @return 对象
      */
     public static <T> T parse(String json, Class<T> clazz) {
         if (!StringUtil.hasLength(json)) {

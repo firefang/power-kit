@@ -41,7 +41,7 @@ public class PermissionAspect {
         this.checker = checker;
     }
 
-    /**
+    /*
      * (Controller || RestController) && PermissionGroup
      */
     @Pointcut("(@within(org.springframework.stereotype.Controller) || "

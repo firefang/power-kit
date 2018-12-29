@@ -18,9 +18,7 @@ import java.lang.annotation.Target;
 public @interface EntityId {
 
     /**
-     * 获取实体类ID的Spring EL表达式，若不写则直接将被标记的对象当作ID
-     * 
-     * @return
+     * @return 获取实体类ID的Spring EL表达式，若不写则直接将被标记的对象当作ID
      */
     String value() default "";
 

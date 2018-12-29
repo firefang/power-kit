@@ -21,12 +21,12 @@ public interface IDialect {
 
     /**
      * 处理查询参数对象
-     *
+     * 
      * @param ms MappedStatement
      * @param parameterObject 参数
-     * @param rowDounds 分页信息
-     * @param boundSql sql
-     * @param pageKey key
+     * @param boundSql SQL
+     * @param rowBounds 分页信息
+     * @param pageKey KEY
      * @return 处理后的参数
      */
     Object processParameterObject(MappedStatement ms, Object parameterObject, BoundSql boundSql, RowBounds rowBounds,

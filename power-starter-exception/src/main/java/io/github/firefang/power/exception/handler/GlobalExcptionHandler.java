@@ -39,8 +39,8 @@ public class GlobalExcptionHandler extends ResponseEntityExceptionHandler {
     /**
      * 处理认证失败异常
      * 
-     * @param ex
-     * @return
+     * @param ex 异常信息
+     * @return 响应信息
      */
     @ExceptionHandler(UnAuthorizedException.class)
     public ResponseEntity<CommonResponse<Void>> handle(UnAuthorizedException ex) {
@@ -50,8 +50,8 @@ public class GlobalExcptionHandler extends ResponseEntityExceptionHandler {
     /**
      * 处理无权操作异常
      * 
-     * @param ex
-     * @return
+     * @param ex 异常信息
+     * @return 响应信息
      */
     @ExceptionHandler(NoPermissionException.class)
     public ResponseEntity<Void> handle(NoPermissionException ex) {
@@ -61,8 +61,8 @@ public class GlobalExcptionHandler extends ResponseEntityExceptionHandler {
     /**
      * 处理业务异常
      * 
-     * @param ex
-     * @return
+     * @param ex 异常信息
+     * @return 响应信息
      */
     @ExceptionHandler(BusinessException.class)
     public ResponseEntity<CommonResponse<Void>> handleBusinessException(BusinessException ex) {
@@ -72,9 +72,9 @@ public class GlobalExcptionHandler extends ResponseEntityExceptionHandler {
     /**
      * 处理无效请求异常
      * 
-     * @param ex
-     * @param request
-     * @return
+     * @param ex 异常信息
+     * @param request 请求信息
+     * @return 响应信息
      */
     @ExceptionHandler(BadRequestException.class)
     public ResponseEntity<CommonResponse<Void>> handleBadRequestException(BadRequestException ex, WebRequest request) {
@@ -84,8 +84,8 @@ public class GlobalExcptionHandler extends ResponseEntityExceptionHandler {
     /**
      * 处理未知异常
      * 
-     * @param ex
-     * @return
+     * @param ex 异常信息
+     * @return 响应信息
      */
     @ExceptionHandler(Exception.class)
     public ResponseEntity<CommonResponse<Void>> handle(Exception ex) {

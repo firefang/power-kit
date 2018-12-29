@@ -18,9 +18,7 @@ import java.lang.annotation.Target;
 public @interface Permission {
 
     /**
-     * 权限名称（不可重复）
-     * 
-     * @return
+     * @return 权限名称（不可重复）
      */
     String value();
 }

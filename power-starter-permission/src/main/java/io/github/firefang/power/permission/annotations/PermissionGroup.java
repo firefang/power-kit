@@ -18,9 +18,7 @@ import java.lang.annotation.Target;
 public @interface PermissionGroup {
 
     /**
-     * 分组名
-     * 
-     * @return
+     * @return 分组名
      */
     String value();
 }
