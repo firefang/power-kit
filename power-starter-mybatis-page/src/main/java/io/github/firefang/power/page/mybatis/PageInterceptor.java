@@ -136,8 +136,8 @@ public class PageInterceptor implements Interceptor {
     /**
      * 判断是否需要分页
      * 
-     * @param rowBounds
-     * @return
+     * @param rowBounds 分页信息
+     * @return 需要分页返回true，否则返回false
      */
     private boolean needPageable(RowBounds rowBounds) {
         if (rowBounds == null) {

@@ -16,9 +16,9 @@ public interface IPageableMapper<T, PK extends Serializable> extends IBaseMapper
     /**
      * 根据条件分页查询
      * 
-     * @param condition
-     * @param page
-     * @return
+     * @param condition 查询条件
+     * @param page 分页条件
+     * @return 查询到的实体类列表
      */
     List<T> find(T condition, Pagination page);
 

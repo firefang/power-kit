@@ -34,8 +34,9 @@ public class DialectUtil {
     /**
      * 根据 DataSource 获取数据库方言
      * 
-     * @param dataSource
-     * @return
+     * @param dataSource 数据源
+     * @return 数据库方言对象
+     * @throws Exception 实例化数据库方言失败时抛出
      */
     public static IDialect getDialect(DataSource dataSource) throws Exception {
         IDialect dialect = DATASOURCE_DIALECT_MAP.get(dataSource);
@@ -51,8 +52,8 @@ public class DialectUtil {
     /**
      * 获取数据库产品名称
      * 
-     * @param dataSource
-     * @return
+     * @param dataSource 数据源
+     * @return 数据库名称
      */
     private static String getDatabaseProductName(DataSource dataSource) {
         Connection conn = null;
@@ -90,8 +91,8 @@ public class DialectUtil {
     /**
      * 根据数据库产品名称获取对应方言Class
      * 
-     * @param dbname
-     * @return
+     * @param dbname 数据库名称
+     * @return 对应的数据库方言类型
      */
     private static Class<?> fromDatabaseProductName(String dbname) {
         Class<?> clazz = DIALECT_ALIAS_MAP.get(dbname);

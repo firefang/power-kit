@@ -29,6 +29,8 @@ import io.github.firefang.power.login.token.TokenController;
 import io.github.firefang.power.login.token.TokenHandlerInterceptor;
 
 /**
+ * 自动配置类，自动配置拦截器和登录Controller
+ * 
  * @author xinufo
  *
  */

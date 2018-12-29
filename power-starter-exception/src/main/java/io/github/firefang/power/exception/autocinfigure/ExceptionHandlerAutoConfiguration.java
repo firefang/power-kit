@@ -10,7 +10,7 @@ import io.github.firefang.power.exception.handler.GlobalExcptionHandler;
 import io.github.firefang.power.web.CommonResponse;
 
 /**
- * Auto-configuration for registering a global exception handler
+ * 自动配置类，自动配置全局异常处理器
  * 
  * @author xinufo
  *

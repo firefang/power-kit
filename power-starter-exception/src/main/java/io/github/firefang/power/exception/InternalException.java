@@ -1,7 +1,7 @@
 package io.github.firefang.power.exception;
 
 /**
- * Thrown when there is a unknown exception
+ * 服务器内部异常，当发生未知错误时抛出
  * 
  * @author xinufo
  *

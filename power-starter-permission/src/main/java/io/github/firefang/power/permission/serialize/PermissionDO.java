@@ -1,6 +1,8 @@
 package io.github.firefang.power.permission.serialize;
 
 /**
+ * 权限实体类
+ * 
  * @author xinufo
  *
  */

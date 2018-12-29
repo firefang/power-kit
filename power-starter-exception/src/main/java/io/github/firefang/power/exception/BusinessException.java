@@ -1,7 +1,7 @@
 package io.github.firefang.power.exception;
 
 /**
- * Thrown when running business logic fails
+ * 业务异常，当业务执行失败时抛出
  * 
  * @author xinufo
  *

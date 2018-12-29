@@ -1,7 +1,7 @@
 package io.github.firefang.power.common.util;
 
 /**
- * Utility class for String
+ * 字符串工具类
  * 
  * @author xinufo
  *

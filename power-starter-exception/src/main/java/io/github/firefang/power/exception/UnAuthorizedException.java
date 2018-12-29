@@ -1,7 +1,7 @@
 package io.github.firefang.power.exception;
 
 /**
- * Thrown when authentication fails
+ * 认证异常，当认证失败时抛出
  * 
  * @author xinufo
  *

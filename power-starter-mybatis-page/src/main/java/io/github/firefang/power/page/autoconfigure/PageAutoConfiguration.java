@@ -14,7 +14,7 @@ import org.springframework.context.annotation.Configuration;
 import io.github.firefang.power.page.mybatis.PageInterceptor;
 
 /**
- * Auto-configuration for mybatis interceptor
+ * 自动配置类，自动配置Mybatis分页拦截器
  * 
  * @author xinufo
  *

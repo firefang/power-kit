@@ -39,10 +39,10 @@ public class OrderByParser {
 
     /**
      * convert to order by sql
-     *
-     * @param sql
-     * @param orderBy
-     * @return
+     * 
+     * @param sql SQL语句
+     * @param orderBy ORDER BY的列
+     * @return 带排序的SQL
      */
     public static String converToOrderBySql(String sql, String orderBy) {
         // 解析SQL
@@ -67,8 +67,9 @@ public class OrderByParser {
 
     /**
      * extra order by and set default orderby to null
-     *
-     * @param selectBody
+     * 
+     * @param selectBody select对象
+     * @return order by对象
      */
     public static List<OrderByElement> extraOrderBy(SelectBody selectBody) {
         if (selectBody instanceof PlainSelect) {

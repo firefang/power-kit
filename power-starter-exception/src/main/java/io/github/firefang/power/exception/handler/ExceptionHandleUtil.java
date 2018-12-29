@@ -19,7 +19,7 @@ import io.github.firefang.power.exception.UnAuthorizedException;
 import io.github.firefang.power.web.CommonResponse;
 
 /**
- * Utility class for handling exception
+ * 异常处理工具类
  * 
  * @author xinufo
  *

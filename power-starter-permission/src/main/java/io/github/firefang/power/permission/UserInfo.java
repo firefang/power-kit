@@ -1,6 +1,8 @@
 package io.github.firefang.power.permission;
 
 /**
+ * 用户信息
+ * 
  * @author xinufo
  *
  */

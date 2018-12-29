@@ -25,7 +25,7 @@ public interface IPageableService<C, R> {
      * @param page 页码
      * @param size 每页条数
      * @param sort 排序信息
-     * @return
+     * @return 分页结果
      */
     default Page<R> findByPage(C condition, int page, int size, Sort sort) {
         if (page <= 0) {
@@ -52,7 +52,7 @@ public interface IPageableService<C, R> {
      * 根据条件统计数量
      * 
      * @param condition 查询条件
-     * @return
+     * @return 查询到的条数
      */
     Long count(C condition);
 
@@ -61,7 +61,7 @@ public interface IPageableService<C, R> {
      * 
      * @param condition 查询条件
      * @param pagination 分页条件
-     * @return
+     * @return 查询到的实体类列表
      */
     List<R> find(C condition, Pagination pagination);
 

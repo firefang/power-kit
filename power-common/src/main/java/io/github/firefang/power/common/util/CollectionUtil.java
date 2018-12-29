@@ -4,7 +4,7 @@ import java.util.Collection;
 import java.util.Map;
 
 /**
- * Utility class for Collection
+ * Collection工具类
  * 
  * @author xinufo
  *

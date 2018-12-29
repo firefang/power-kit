@@ -23,11 +23,11 @@ public interface IDialect {
      * 处理查询参数对象
      *
      * @param ms MappedStatement
-     * @param parameterObject
-     * @param rowDounds
-     * @param boundSql
-     * @param pageKey
-     * @return
+     * @param parameterObject 参数
+     * @param rowDounds 分页信息
+     * @param boundSql sql
+     * @param pageKey key
+     * @return 处理后的参数
      */
     Object processParameterObject(MappedStatement ms, Object parameterObject, BoundSql boundSql, RowBounds rowBounds,
             CacheKey pageKey);
@@ -35,10 +35,10 @@ public interface IDialect {
     /**
      * 生成分页查询 sql
      * 
-     * @param sql
-     * @param rowBounds
-     * @param pageKey
-     * @return
+     * @param sql 原始SQL
+     * @param rowBounds 分页
+     * @param pageKey key
+     * @return 带分页的SQL
      */
     String getPageSql(String sql, RowBounds rowBounds, CacheKey pageKey);
 

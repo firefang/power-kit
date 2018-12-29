@@ -27,7 +27,7 @@ import io.github.firefang.power.exception.UnAuthorizedException;
 import io.github.firefang.power.web.CommonResponse;
 
 /**
- * Global exception handler for controllers
+ * 全局异常处理器
  * 
  * @author xinufo
  *

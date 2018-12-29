@@ -3,6 +3,8 @@ package io.github.firefang.power.permission;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
 /**
+ * Starter配置信息
+ * 
  * @author xinufo
  *
  */

@@ -5,7 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 
 /**
- * Utility class for JSON
+ * JSON工具类
  * 
  * @author xinufo
  *

@@ -11,6 +11,8 @@ import io.github.firefang.power.login.ILoginController;
 import io.github.firefang.power.web.CommonResponse;
 
 /**
+ * Session认证Controller
+ * 
  * @author xinufo
  *
  */

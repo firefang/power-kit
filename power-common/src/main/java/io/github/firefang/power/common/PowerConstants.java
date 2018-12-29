@@ -1,7 +1,7 @@
 package io.github.firefang.power.common;
 
 /**
- * Constants of Power
+ * 常量列表
  * 
  * @author xinufo
  *

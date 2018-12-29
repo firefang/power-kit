@@ -1,7 +1,7 @@
 package io.github.firefang.power.login;
 
 /**
- * Marker interface for login controller
+ * 标记性接口，用于识别登录Controller
  * 
  * @author xinufo
  *

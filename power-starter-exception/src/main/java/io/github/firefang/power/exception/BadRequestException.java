@@ -1,7 +1,7 @@
 package io.github.firefang.power.exception;
 
 /**
- * Thrown when the request is invalid
+ * 非法请求异常，当请求不合法（例如参数错误）时抛出
  * 
  * @author xinufo
  *

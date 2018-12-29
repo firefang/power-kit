@@ -55,14 +55,8 @@ public abstract class AbstractDialect implements IDialect {
         return processPageParameter(ms, paramMap, boundSql, rowBounds, pageKey);
     }
 
-    /**
+    /*
      * 处理分页参数
-     *
-     * @param ms
-     * @param paramMap
-     * @param boundSql
-     * @param pageKey
-     * @return
      */
     public abstract Object processPageParameter(MappedStatement ms, Map<String, Object> paramMap, BoundSql boundSql,
             RowBounds rowBounds, CacheKey pageKey);

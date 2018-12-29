@@ -11,6 +11,8 @@ import org.apache.ibatis.type.JdbcType;
 import io.github.firefang.power.common.util.JsonUtil;
 
 /**
+ * JSON类型处理器
+ * 
  * @author xinufo
  *
  */
