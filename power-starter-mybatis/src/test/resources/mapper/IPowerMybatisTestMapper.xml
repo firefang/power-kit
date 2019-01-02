@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="io.github.firefang.power.test.mapper.IPowerMybatisTestMapper">
+    <resultMap type="PowerMybatisTestEntity" id="map">
+        <id property="id" column="id" />
+        <result property="props" column="props" typeHandler="io.github.firefang.power.type.JsonTypeHandler" />
+    </resultMap>
+
+    <insert id="add">
+        insert into test values (#{id}, #{props, typeHandler = io.github.firefang.power.type.JsonTypeHandler});
+    </insert>
+
+    <select id="findById" resultMap="map">
+        select * from test where id = #{id};
+    </select>
+</mapper>

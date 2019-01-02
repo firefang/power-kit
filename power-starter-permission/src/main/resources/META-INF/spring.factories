@@ -1,0 +1,3 @@
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+io.github.firefang.power.permission.autoconfigure.PermissionAutoConfiguration,\
+io.github.firefang.power.permission.autoconfigure.ListenerAutoConfiguration
