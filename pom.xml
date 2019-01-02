@@ -9,6 +9,7 @@
     <version>0.0.1</version>
     <name>power-kit</name>
     <url>https://github.com/firefang</url>
+    <description>a kit for web development</description>
 
     <licenses>
         <license>
