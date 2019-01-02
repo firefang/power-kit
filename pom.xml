@@ -10,6 +10,17 @@
     <name>power-kit</name>
     <url>https://github.com/firefang</url>
 
+    <licenses>
+        <license>
+            <name>MIT License</name>
+            <url>https://opensource.org/licenses/MIT</url>
+        </license>
+    </licenses>
+
+    <scm>
+        <url>https://github.com/firefang/power-kit</url>
+    </scm>
+
     <developers>
         <developer>
             <name>xinufo</name>
@@ -56,6 +67,16 @@
     <profiles>
         <profile>
             <id>deploy</id>
+            <distributionManagement>
+                <snapshotRepository>
+                    <id>ossrh</id>
+                    <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+                </snapshotRepository>
+                <repository>
+                    <id>ossrh</id>
+                    <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+                </repository>
+            </distributionManagement>
             <build>
                 <plugins>
                     <plugin>
