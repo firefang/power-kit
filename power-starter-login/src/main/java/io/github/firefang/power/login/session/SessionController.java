@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import io.github.firefang.power.login.ILoginController;
+import io.github.firefang.power.login.PublicEndPoint;
 import io.github.firefang.power.web.CommonResponse;
 
 /**
@@ -27,17 +28,19 @@ public class SessionController implements ILoginController {
         this.sessionSrv = sessionSrv;
     }
 
+    @PublicEndPoint
     @PostMapping("/login")
     public CommonResponse<Void> login(@RequestParam("username") String username,
-            @RequestParam("password") String password) {
-        sessionSrv.login(username, password);
+            @RequestParam("password") String password, HttpSession session) {
+        sessionSrv.login(username, password, session);
         return CommonResponse.success();
     }
 
     @PostMapping("/logout")
     public CommonResponse<Void> logout(HttpSession session) {
         Object userInfo = session.getAttribute(key);
-        sessionSrv.logout(userInfo);
+        sessionSrv.logout(userInfo, session);
+        session.invalidate();
         return CommonResponse.success();
     }
 

@@ -3,6 +3,7 @@ package io.github.firefang.power.login.autoconfigure;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -57,12 +58,14 @@ public class LoginAutoConfigurationTokenTest {
         mvc.perform(post("/auth/login").param("username", "test").param("password", "test")).andExpect(status().isOk())
                 .andExpect(content().json("{'code':200, 'message':'ok', 'data':'token'}"));
         verify(srv).login("test", "test");
+        verifyNoMoreInteractions(srv);
     }
 
     @Test
     public void logout_Success() throws Exception {
         mvc.perform(post("/auth/logout").header(KEY, "token")).andExpect(status().isOk())
                 .andExpect(content().json("{'code':200, 'message':'ok', 'data':null}"));
+        verify(srv).auth("token");
         verify(srv).logout("token");
     }
 
@@ -70,13 +73,14 @@ public class LoginAutoConfigurationTokenTest {
     public void loginRequest_Success() throws Exception {
         mvc.perform(get("/test").header(KEY, "token")).andExpect(status().isOk()).andExpect(content().string("ok"));
         verify(srv).auth("token");
+        verifyNoMoreInteractions(srv);
     }
 
     @Test
     public void noLoginRequest_Fail() throws Exception {
         doThrow(new UnAuthorizedException()).when(srv).auth("token");
         mvc.perform(get("/test").header(KEY, "token")).andExpect(status().isUnauthorized())
-                .andExpect(content().json("{'code':600, 'message':null, 'data':null}"));
+                .andExpect(content().json("{'code':401, 'message':null, 'data':null}"));
     }
 
 }
