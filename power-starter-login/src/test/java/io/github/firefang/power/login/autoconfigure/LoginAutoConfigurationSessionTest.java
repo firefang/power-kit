@@ -5,6 +5,7 @@ import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
+import static org.mockito.Mockito.verifyZeroInteractions;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -87,6 +88,12 @@ public class LoginAutoConfigurationSessionTest {
         doThrow(new UnAuthorizedException()).when(srv).auth(Mockito.any());
         mvc.perform(get("/test")).andExpect(status().isUnauthorized())
                 .andExpect(content().json("{'code':401, 'message':null, 'data':null}"));
+    }
+
+    @Test
+    public void noFound_Success() throws Exception {
+        mvc.perform(get("/404")).andExpect(status().isNotFound());
+        verifyZeroInteractions(srv);
     }
 
 }
