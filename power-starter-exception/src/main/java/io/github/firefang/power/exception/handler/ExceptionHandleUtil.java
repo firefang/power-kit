@@ -31,7 +31,7 @@ public class ExceptionHandleUtil {
 
     public static ResponseEntity<CommonResponse<Void>> handle(UnAuthorizedException ex) {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                .body(CommonResponse.fail(CommonResponse.BUSINESS_FAIL, ex.getMessage()));
+                .body(CommonResponse.fail(CommonResponse.UNAUTHORIZED, ex.getMessage()));
     }
 
     public static ResponseEntity<Void> handle(NoPermissionException ex) {

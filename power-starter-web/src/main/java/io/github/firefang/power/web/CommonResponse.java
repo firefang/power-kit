@@ -9,6 +9,7 @@ package io.github.firefang.power.web;
 public class CommonResponse<T> {
     public static final int SUCCESS = 200;
     public static final int BAD_REQUEST = 400;
+    public static final int UNAUTHORIZED = 401;
     public static final int INTERNAL_ERROR = 500;
     public static final int BUSINESS_FAIL = 600;
 
