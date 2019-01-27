@@ -1,5 +1,6 @@
 package io.github.firefang.power.common.util;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
@@ -37,6 +38,18 @@ public class CollectionUtilTest {
     public void isEmpty_Map_NotNull_False() {
         Map<?, ?> m = Collections.singletonMap("test", "test");
         assertFalse(CollectionUtil.isEmpty(m));
+    }
+
+    @Test
+    public void mapSize_Success() {
+        int size = CollectionUtil.mapSize(10);
+        assertEquals(14, size);
+    }
+
+    @Test
+    public void mapSize_Factor_Success() {
+        int size = CollectionUtil.mapSize(10, 1F);
+        assertEquals(11, size);
     }
 
 }
