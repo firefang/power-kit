@@ -6,9 +6,10 @@
     <artifactId>power-kit</artifactId>
     <packaging>pom</packaging>
 
-    <version>0.0.1</version>
+    <version>0.0.2</version>
     <name>power-kit</name>
     <url>https://github.com/firefang</url>
+    <description>a kit for web development</description>
 
     <licenses>
         <license>

@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import io.github.firefang.power.login.ILoginController;
+import io.github.firefang.power.login.PublicEndPoint;
 import io.github.firefang.power.web.CommonResponse;
 
 /**
@@ -27,6 +28,7 @@ public class TokenController implements ILoginController {
         this.tokenSrv = tokenSrv;
     }
 
+    @PublicEndPoint
     @PostMapping("/login")
     public CommonResponse<String> login(@RequestParam("username") String username,
             @RequestParam("password") String password) {

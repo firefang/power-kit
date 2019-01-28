@@ -39,7 +39,7 @@ public class GlobalExcptionHandlerTest {
     @Test
     public void unAuth() throws Exception {
         mvc.perform(get("/unauth")).andExpect(status().isUnauthorized())
-                .andExpect(content().json("{'code':600,'message':null,'data':null}", true));
+                .andExpect(content().json("{'code':401,'message':null,'data':null}", true));
     }
 
     @Test

@@ -1,9 +1,9 @@
 package io.github.firefang.power.login.token;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
-import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
+import io.github.firefang.power.exception.UnAuthorizedException;
+import io.github.firefang.power.login.BaseAuthInterceptor;
 
 /**
  * Token认证拦截器
@@ -11,7 +11,7 @@ import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
  * @author xinufo
  *
  */
-public class TokenHandlerInterceptor extends HandlerInterceptorAdapter {
+public class TokenHandlerInterceptor extends BaseAuthInterceptor {
     private String key;
     private ITokenAuthService tokenSrv;
 
@@ -21,11 +21,9 @@ public class TokenHandlerInterceptor extends HandlerInterceptorAdapter {
     }
 
     @Override
-    public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
-            throws Exception {
+    protected void intercept(HttpServletRequest request) throws UnAuthorizedException {
         String token = request.getHeader(key);
         tokenSrv.auth(token);
-        return true;
     }
 
 }
