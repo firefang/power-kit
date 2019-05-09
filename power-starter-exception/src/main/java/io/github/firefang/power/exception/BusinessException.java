@@ -8,15 +8,9 @@ package io.github.firefang.power.exception;
  */
 public class BusinessException extends RuntimeException {
     private static final long serialVersionUID = -6928110947306000370L;
-    private String operation;
 
-    public BusinessException(String operation, String message) {
+    public BusinessException(String message) {
         super(message);
-        this.operation = operation;
-    }
-
-    public String getOperation() {
-        return operation;
     }
 
 }

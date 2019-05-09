@@ -39,21 +39,13 @@ public class ExceptionHandleUtil {
     }
 
     public static ResponseEntity<CommonResponse<Void>> handle(BusinessException ex, Logger log) {
-        String operation = ex.getOperation();
-        String reason = ex.getMessage();
-        StringBuilder msg = new StringBuilder();
-        msg.append("执行[").append(operation).append("]失败");
+        String reason = "操作失败, " + ex.getMessage();
 
-        if (reason != null) {
-            msg.append(", 原因: ").append(reason);
-        }
-
-        String msgStr = msg.toString();
         if (log.isWarnEnabled()) {
-            log.warn("业务异常: " + msgStr);
+            log.warn("业务异常: " + reason);
         }
 
-        CommonResponse<Void> body = CommonResponse.fail(CommonResponse.BUSINESS_FAIL, msgStr);
+        CommonResponse<Void> body = CommonResponse.fail(CommonResponse.BUSINESS_FAIL, reason);
         return ResponseEntity.ok().body(body);
     }
 
