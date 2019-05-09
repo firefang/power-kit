@@ -31,7 +31,8 @@ public class ListenerAutoConfigurationTest {
 
     @Test
     public void test() {
-        List<String> names = Arrays.asList("test", "testId", "testExp");
+        List<String> names = Arrays.asList("test", "testId", "testExp", "testVertical", "testHorizontal",
+                "testNoChcek");
         MockingDetails details = mockingDetails(permSrv);
         List<PermissionDO> ps = null;
         boolean invoked = false;
@@ -43,7 +44,7 @@ public class ListenerAutoConfigurationTest {
             }
         }
         assertTrue(invoked);
-        assertEquals(3, ps.size());
+        assertEquals(6, ps.size());
         for (PermissionDO p : ps) {
             assertTrue(names.contains(p.getName()));
             assertEquals("test", p.getGroup());

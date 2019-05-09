@@ -1,6 +1,11 @@
 package io.github.firefang.power.permission;
 
+import java.util.Map;
+
 import javax.servlet.http.HttpServletRequest;
+
+import io.github.firefang.power.permission.annotations.Permission;
+import io.github.firefang.power.permission.annotations.PermissionParam;
 
 /**
  * Checker for permission
@@ -19,14 +24,24 @@ public interface IPermissionChecker {
     UserInfo getUserInfoFromRequest(HttpServletRequest request);
 
     /**
-     * 检查是否有权操作
+     * 横向权限校验，需设置{@link Permission#horizontalCheck()}为true
      * 
-     * @param permission 权限
-     * @param userId 用户ID
-     * @param roleId 角色ID
-     * @param entityId 正在访问的实体类ID
-     * @return 有权操作返回true，否则返回false
+     * @param permission 待访问权限的名称
+     * @param info 用户信息
+     * @param params 权限所在的方法上{@link PermissionParam}注解解析出来的参数
+     * @param extra {@link Permission}上配置的额外参数
+     * @return
      */
-    public boolean canAccess(String permission, Object userId, Object roleId, Object entityId);
+    boolean horizontalCheck(String permission, UserInfo info, Map<String, Object> params, Map<String, Object> extra);
 
+    /**
+     * 纵向权限校验，需设置{@link Permission#verticalCheck()}为true
+     * 
+     * @param permission 待访问权限的名称
+     * @param info 用户信息
+     * @param params 权限所在的方法上{@link PermissionParam}注解解析出来的参数
+     * @param extra {@link Permission}上配置的额外参数
+     * @return
+     */
+    boolean verticalCheck(String permission, UserInfo info, Map<String, Object> params, Map<String, Object> extra);
 }
