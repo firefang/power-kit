@@ -17,9 +17,9 @@
 
 ### 默认添加的命名
 
-默认添加只读事务：select*、find*、count*、list*、query*、get*、check*、*
-默认添加传播事务：add*、save*、insert*、create*、delete*、remove*、update*、edit*、batch*
-默认拦截事务的Bean：*Service、*ServiceImpl
+- 默认添加只读事务：select*、find*、count*、list*、query*、get*、check*、*
+- 默认添加传播事务：add*、save*、insert*、create*、delete*、remove*、update*、edit*、batch*
+- 默认拦截事务的Bean：*Service、*ServiceImpl
 
 ## 配置项
 
