@@ -6,7 +6,7 @@
     <parent>
         <groupId>io.github.firefang</groupId>
         <artifactId>power-kit</artifactId>
-        <version>0.0.2</version>
+        <version>0.0.3</version>
     </parent>
 
     <artifactId>power-starter-mybatis</artifactId>
