@@ -2,6 +2,8 @@ package io.github.firefang.power.permission.aspect;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
@@ -11,10 +13,12 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import java.util.Collections;
+import java.util.Map;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.Mockito;
 import org.springframework.aop.support.AopUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -58,36 +62,13 @@ public class PermissionAspectTest {
     }
 
     @Test
-    public void checkPermission_NoUserInfo_Forbidden() throws Exception {
-        mvc.perform(get("/check")).andExpect(status().isForbidden());
-    }
-
-    @Test
     public void proxy() {
         assertTrue(AopUtils.isAopProxy(controller));
     }
 
     @Test
-    public void checkPermission_NoPermission_Forbidden() throws Exception {
-        UserInfo info = new UserInfo();
-        info.setUserId(1);
-        info.setRoleId(1);
-        when(checker.getUserInfoFromRequest(Mockito.any())).thenReturn(info);
-        when(checker.canAccess("test", 1, 1, null)).thenReturn(false);
-
+    public void checkPermission_NoUserInfo_Forbidden() throws Exception {
         mvc.perform(get("/check")).andExpect(status().isForbidden());
-        verify(checker).canAccess("test", 1, 1, null);
-    }
-
-    @Test
-    public void checkPermission_Exception_Forbidden() throws Exception {
-        UserInfo info = new UserInfo();
-        info.setUserId(1);
-        info.setRoleId(1);
-        when(checker.getUserInfoFromRequest(Mockito.any())).thenReturn(info);
-        when(checker.canAccess("test", 1, 1, null)).thenThrow(RuntimeException.class);
-        mvc.perform(get("/check")).andExpect(status().isForbidden());
-        verify(checker).canAccess("test", 1, 1, null);
     }
 
     @Test
@@ -95,31 +76,92 @@ public class PermissionAspectTest {
         UserInfo info = new UserInfo();
         info.setUserId(1);
         info.setRoleId(1);
-        when(checker.getUserInfoFromRequest(Mockito.any())).thenReturn(info);
-        when(checker.canAccess("test", 1, 1, null)).thenReturn(true);
+        when(checker.getUserInfoFromRequest(any())).thenReturn(info);
+        Map<String, Object> params = Collections.singletonMap("id", 1);
+        when(checker.verticalCheck(eq("test"), eq(info), any(), eq(params))).thenReturn(true);
+        when(checker.horizontalCheck(eq("test"), eq(info), any(), eq(params))).thenReturn(true);
         mvc.perform(get("/check")).andExpect(status().isOk()).andExpect(content().string("a"));
     }
 
     @Test
-    public void checkPerm_EntityId_Success() throws Exception {
+    public void checkPerm_Params_Success() throws Exception {
         UserInfo info = new UserInfo();
         info.setUserId(1);
         info.setRoleId(1);
-        when(checker.getUserInfoFromRequest(Mockito.any())).thenReturn(info);
-        when(checker.canAccess("testId", 1, 1, 1)).thenReturn(true);
+        when(checker.getUserInfoFromRequest(any())).thenReturn(info);
+        Map<String, Object> params = Collections.singletonMap("id", 1);
+        when(checker.verticalCheck(eq("testId"), eq(info), eq(params), any())).thenReturn(true);
+        when(checker.horizontalCheck(eq("testId"), eq(info), eq(params), any())).thenReturn(true);
         mvc.perform(get("/checkId").param("id", "1")).andExpect(status().isOk()).andExpect(content().string("a"));
     }
 
     @Test
-    public void checkPerm_EntityIdExpression_Success() throws Exception {
+    public void checkPerm_ParamsExp_Success() throws Exception {
         UserInfo info = new UserInfo();
         info.setUserId(1);
         info.setRoleId(1);
-        when(checker.getUserInfoFromRequest(Mockito.any())).thenReturn(info);
-        when(checker.canAccess("testExp", 1, 1, 1)).thenReturn(true);
+        when(checker.getUserInfoFromRequest(any())).thenReturn(info);
+        Map<String, Object> params = Collections.singletonMap("id", 1);
+        when(checker.verticalCheck(eq("testExp"), eq(info), eq(params), any())).thenReturn(true);
+        when(checker.horizontalCheck(eq("testExp"), eq(info), eq(params), any())).thenReturn(true);
         mvc.perform(
                 post("/checkExp").contentType(MediaType.APPLICATION_JSON_UTF8).content("{\"id\":1, \"name\":\"a\"}"))
                 .andExpect(status().isOk()).andExpect(content().string("a"));
+    }
+
+    @Test
+    public void checkPermission_VerticalException_Forbidden() throws Exception {
+        UserInfo info = new UserInfo();
+        info.setUserId(1);
+        info.setRoleId(1);
+        when(checker.getUserInfoFromRequest(any())).thenReturn(info);
+        when(checker.verticalCheck(eq("testVertical"), eq(info), any(), any())).thenThrow(RuntimeException.class);
+        mvc.perform(get("/verticalCheck")).andExpect(status().isForbidden());
+        verify(checker).verticalCheck(eq("testVertical"), eq(info), any(), any());
+    }
+
+    @Test
+    public void checkPermission_VerticalFalse_Forbidden() throws Exception {
+        UserInfo info = new UserInfo();
+        info.setUserId(1);
+        info.setRoleId(1);
+        when(checker.getUserInfoFromRequest(any())).thenReturn(info);
+        when(checker.verticalCheck(eq("testVertical"), eq(info), any(), any())).thenReturn(false);
+        mvc.perform(get("/verticalCheck")).andExpect(status().isForbidden());
+        verify(checker).verticalCheck(eq("testVertical"), eq(info), any(), any());
+    }
+
+    @Test
+    public void checkPermission_HorizontalException_Forbidden() throws Exception {
+        UserInfo info = new UserInfo();
+        info.setUserId(1);
+        info.setRoleId(1);
+        when(checker.getUserInfoFromRequest(any())).thenReturn(info);
+        when(checker.verticalCheck(eq("testVertical"), eq(info), any(), any())).thenReturn(true);
+        when(checker.horizontalCheck(eq("testHorizontal"), eq(info), any(), any())).thenThrow(RuntimeException.class);
+        mvc.perform(get("/horizontalCheck")).andExpect(status().isForbidden());
+        verify(checker).horizontalCheck(eq("testHorizontal"), eq(info), any(), any());
+    }
+
+    @Test
+    public void checkPermission_HorizontalFalse_Forbidden() throws Exception {
+        UserInfo info = new UserInfo();
+        info.setUserId(1);
+        info.setRoleId(1);
+        when(checker.getUserInfoFromRequest(any())).thenReturn(info);
+        when(checker.verticalCheck(eq("testVertical"), eq(info), any(), any())).thenReturn(true);
+        when(checker.horizontalCheck(eq("testHorizontal"), eq(info), any(), any())).thenReturn(false);
+        mvc.perform(get("/horizontalCheck")).andExpect(status().isForbidden());
+        verify(checker).horizontalCheck(eq("testHorizontal"), eq(info), any(), any());
+    }
+
+    @Test
+    public void checkPermission_NoCheck_Success() throws Exception {
+        UserInfo info = new UserInfo();
+        info.setUserId(1);
+        info.setRoleId(1);
+        when(checker.getUserInfoFromRequest(any())).thenReturn(info);
+        mvc.perform(get("/noCheck")).andExpect(status().isOk());
     }
 
     @Test

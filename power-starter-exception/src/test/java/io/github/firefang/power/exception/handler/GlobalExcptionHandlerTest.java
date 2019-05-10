@@ -50,7 +50,7 @@ public class GlobalExcptionHandlerTest {
     @Test
     public void business() throws Exception {
         mvc.perform(get("/business")).andExpect(status().isOk())
-                .andExpect(content().json("{'code':600,'message':'执行[test]失败, 原因: test','data':null}", true));
+                .andExpect(content().json("{'code':600,'message':'操作失败, test','data':null}", true));
     }
 
     @Test

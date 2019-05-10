@@ -1,2 +1,2 @@
 org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
-io.github.firefang.power.exception.autocinfigure.ExceptionHandlerAutoConfiguration
+io.github.firefang.power.exception.autoconfigure.ExceptionHandlerAutoConfiguration

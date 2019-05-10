@@ -2,6 +2,9 @@ package io.github.firefang.power.permission.aspect;
 
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -20,8 +23,8 @@ import org.springframework.expression.spel.support.StandardEvaluationContext;
 import io.github.firefang.power.exception.NoPermissionException;
 import io.github.firefang.power.permission.IPermissionChecker;
 import io.github.firefang.power.permission.UserInfo;
-import io.github.firefang.power.permission.annotations.EntityId;
 import io.github.firefang.power.permission.annotations.Permission;
+import io.github.firefang.power.permission.annotations.PermissionParam;
 import io.github.firefang.power.web.util.CurrentRequestUtil;
 
 /**
@@ -56,49 +59,82 @@ public class PermissionAspect {
         UserInfo info = checker.getUserInfoFromRequest(request);
         if (info != null) {
             String permission = anno.value();
-            boolean access = false;
-            Object entityId;
-            entityId = getEntityIdFromExpression(pjp);
-            try {
-                access = checker.canAccess(permission, info.getUserId(), info.getRoleId(), entityId);
-            } catch (Exception e) {
-                LOG.error("Check permission failed", e);
-                throw new NoPermissionException();
+            Map<String, Object> params = collectParams(pjp);
+            Map<String, Object> extra = collectExtraParams(anno.extraParams());
+            if (anno.verticalCheck()) {
+                verticalCheck(permission, info, params, extra);
             }
-            if (access) {
-                return pjp.proceed();
+            if (anno.horizontalCheck()) {
+                horizontalCheck(permission, info, params, extra);
             }
+            return pjp.proceed();
         }
         throw new NoPermissionException();
     }
 
-    private Object getEntityIdFromExpression(ProceedingJoinPoint pjp) {
+    private Map<String, Object> collectParams(ProceedingJoinPoint pjp) {
         MethodSignature ms = (MethodSignature) pjp.getSignature();
         Method method = ms.getMethod();
-        Object[] args = pjp.getArgs();
+        Object[] values = pjp.getArgs();
         Parameter[] ps = method.getParameters();
-        EntityId anno = null;
-        Object entity = null;
+        PermissionParam anno = null;
+        Map<String, Object> ret = new HashMap<>(8);
         for (int i = 0; i < ps.length; ++i) {
-            if ((anno = ps[i].getAnnotation(EntityId.class)) != null) {
-                entity = args[i];
-                String exp = anno.value();
-                String name = ps[i].getName();
+            if ((anno = ps[i].getAnnotation(PermissionParam.class)) != null) {
+                String name = anno.name();
+                String exp = anno.exp();
+                Object value;
                 if (exp.length() == 0) {
-                    // 未写表达式，直接将被标记的对象当作实体类ID
-                    return entity;
+                    value = values[i];
+                } else {
+                    value = evaluateExpression(exp, values[i], Object.class);
                 }
-                return evaluateExpression(exp, name, entity);
+                ret.put(name, value);
             }
         }
-        return null;
+        return ret;
     }
 
-    private Object evaluateExpression(String expStr, String name, Object entity) {
+    @SuppressWarnings("unchecked")
+    private Map<String, Object> collectExtraParams(String extraExp) {
+        if (extraExp.length() == 0) {
+            return Collections.emptyMap();
+        }
+        return evaluateExpression(extraExp, null, Map.class);
+    }
+
+    private <T> T evaluateExpression(String expStr, Object paramVal, Class<T> clazz) {
         StandardEvaluationContext cxt = new StandardEvaluationContext();
-        cxt.setVariable(name, entity);
+        if (paramVal != null) {
+            // 使用#arg来引用参数
+            cxt.setVariable("arg", paramVal);
+        }
         Expression exp = PARSER.parseExpression(expStr);
-        return exp.getValue(cxt);
+        return exp.getValue(cxt, clazz);
+    }
+
+    private void verticalCheck(String permission, UserInfo info, Map<String, Object> params,
+            Map<String, Object> extra) {
+        try {
+            if (!checker.verticalCheck(permission, info, params, extra)) {
+                throw new NoPermissionException();
+            }
+        } catch (Exception e) {
+            LOG.error("Check permission failed", e);
+            throw new NoPermissionException();
+        }
+    }
+
+    private void horizontalCheck(String permission, UserInfo info, Map<String, Object> params,
+            Map<String, Object> extra) {
+        try {
+            if (!checker.horizontalCheck(permission, info, params, extra)) {
+                throw new NoPermissionException();
+            }
+        } catch (Exception e) {
+            LOG.error("Check permission failed", e);
+            throw new NoPermissionException();
+        }
     }
 
 }

@@ -42,7 +42,7 @@ public class PowerExceptionTestController {
 
     @RequestMapping("/business")
     public void business() {
-        throw new BusinessException("test", "test");
+        throw new BusinessException("test");
     }
 
     @RequestMapping("/badreq")
