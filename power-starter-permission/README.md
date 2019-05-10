@@ -26,5 +26,7 @@ starter 中提供了在启动时自动收集权限并写入数据库的功能，
 
 ## 配置项
 
-1. power.permission.enabled: 是否开启权限校验，默认为true
-2. power.permission.serialize: 是否开启权限自动入库，默认为true
+|配置项|作用|默认值|
+|-|-|-|
+|power.permission.enabled|是否开启权限校验|true|
+|power.permission.serialize|是否开启权限自动入库|true|
