@@ -4,8 +4,7 @@ import org.mockito.Mockito;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 
-import io.github.firefang.power.login.session.ISessionAuthService;
-import io.github.firefang.power.login.token.ITokenAuthService;
+import io.github.firefang.power.login.IAuthService;
 
 /**
  * @author xinufo
@@ -15,13 +14,8 @@ import io.github.firefang.power.login.token.ITokenAuthService;
 public class PowerLoginTestConfiguration {
 
     @Bean
-    public ITokenAuthService tokenService() {
-        return Mockito.mock(ITokenAuthService.class);
-    }
-
-    @Bean
-    public ISessionAuthService sessionService() {
-        return Mockito.mock(ISessionAuthService.class);
+    public IAuthService authService() {
+        return Mockito.mock(IAuthService.class);
     }
 
 }

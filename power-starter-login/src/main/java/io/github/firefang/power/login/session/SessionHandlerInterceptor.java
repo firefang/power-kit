@@ -5,6 +5,7 @@ import javax.servlet.http.HttpSession;
 
 import io.github.firefang.power.exception.UnAuthorizedException;
 import io.github.firefang.power.login.BaseAuthInterceptor;
+import io.github.firefang.power.login.IAuthService;
 
 /**
  * Session认证拦截器
@@ -14,17 +15,17 @@ import io.github.firefang.power.login.BaseAuthInterceptor;
  */
 public class SessionHandlerInterceptor extends BaseAuthInterceptor {
     private String key;
-    private ISessionAuthService sessionSrv;
+    private IAuthService authSrv;
 
-    public SessionHandlerInterceptor(String key, ISessionAuthService sessionSrv) {
+    public SessionHandlerInterceptor(String key, IAuthService authSrv) {
         this.key = key;
-        this.sessionSrv = sessionSrv;
+        this.authSrv = authSrv;
     }
 
     @Override
     protected void intercept(HttpServletRequest request) throws UnAuthorizedException {
         HttpSession session = request.getSession();
-        sessionSrv.auth(session.getAttribute(key));
+        authSrv.auth(session.getAttribute(key));
     }
 
 }

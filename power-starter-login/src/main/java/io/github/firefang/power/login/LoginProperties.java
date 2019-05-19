@@ -1,5 +1,7 @@
 package io.github.firefang.power.login;
 
+import java.util.Set;
+
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
 /**
@@ -29,6 +31,10 @@ public class LoginProperties {
      * Session中存放用户信息或Header中存放Token的key
      */
     private String key;
+    /**
+     * 不拦截的路径
+     */
+    private Set<String> excludePaths;
 
     public boolean isEnabled() {
         return enabled;
@@ -60,6 +66,14 @@ public class LoginProperties {
 
     public void setKey(String key) {
         this.key = key;
+    }
+
+    public Set<String> getExcludePaths() {
+        return excludePaths;
+    }
+
+    public void setExcludePaths(Set<String> excludePaths) {
+        this.excludePaths = excludePaths;
     }
 
     public static enum AuthType {
