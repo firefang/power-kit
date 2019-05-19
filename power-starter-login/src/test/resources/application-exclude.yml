@@ -1,0 +1,5 @@
+power:
+  login:
+    type: session
+    exclude-paths:
+    - /excludes/**

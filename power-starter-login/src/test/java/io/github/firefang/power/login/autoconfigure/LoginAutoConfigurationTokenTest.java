@@ -14,6 +14,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.DirtiesContext;
@@ -24,9 +25,9 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
 import io.github.firefang.power.exception.UnAuthorizedException;
+import io.github.firefang.power.login.IAuthService;
 import io.github.firefang.power.login.LoginProperties;
 import io.github.firefang.power.login.test.PowerLoginTestConfiguration;
-import io.github.firefang.power.login.token.ITokenAuthService;
 
 /**
  * @author xinufo
@@ -43,7 +44,7 @@ public class LoginAutoConfigurationTokenTest {
     private WebApplicationContext wac;
 
     @Autowired
-    private ITokenAuthService srv;
+    private IAuthService srv;
 
     private MockMvc mvc;
 
@@ -55,10 +56,10 @@ public class LoginAutoConfigurationTokenTest {
 
     @Test
     public void login_Success() throws Exception {
-        when(srv.login("test", "test")).thenReturn("token");
+        when(srv.login(Mockito.eq("test"), Mockito.eq("test"), Mockito.any())).thenReturn("token");
         mvc.perform(post("/auth/login").param("username", "test").param("password", "test")).andExpect(status().isOk())
                 .andExpect(content().json("{'code':200, 'message':'ok', 'data':'token'}"));
-        verify(srv).login("test", "test");
+        verify(srv).login(Mockito.eq("test"), Mockito.eq("test"), Mockito.any());
         verifyNoMoreInteractions(srv);
     }
 
@@ -67,7 +68,7 @@ public class LoginAutoConfigurationTokenTest {
         mvc.perform(post("/auth/logout").header(KEY, "token")).andExpect(status().isOk())
                 .andExpect(content().json("{'code':200, 'message':'ok', 'data':null}"));
         verify(srv).auth("token");
-        verify(srv).logout("token");
+        verify(srv).logout(Mockito.any());
     }
 
     @Test

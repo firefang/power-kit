@@ -4,6 +4,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import io.github.firefang.power.exception.UnAuthorizedException;
 import io.github.firefang.power.login.BaseAuthInterceptor;
+import io.github.firefang.power.login.IAuthService;
 
 /**
  * Token认证拦截器
@@ -13,17 +14,17 @@ import io.github.firefang.power.login.BaseAuthInterceptor;
  */
 public class TokenHandlerInterceptor extends BaseAuthInterceptor {
     private String key;
-    private ITokenAuthService tokenSrv;
+    private IAuthService authSrv;
 
-    public TokenHandlerInterceptor(String key, ITokenAuthService tokenSrv) {
+    public TokenHandlerInterceptor(String key, IAuthService authSrv) {
         this.key = key;
-        this.tokenSrv = tokenSrv;
+        this.authSrv = authSrv;
     }
 
     @Override
     protected void intercept(HttpServletRequest request) throws UnAuthorizedException {
         String token = request.getHeader(key);
-        tokenSrv.auth(token);
+        authSrv.auth(token);
     }
 
 }

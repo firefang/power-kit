@@ -1,6 +1,5 @@
 package io.github.firefang.power.login.autoconfigure;
 
-import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.verify;
@@ -17,6 +16,7 @@ import org.junit.runner.RunWith;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpSession;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
@@ -26,8 +26,8 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
 import io.github.firefang.power.exception.UnAuthorizedException;
+import io.github.firefang.power.login.IAuthService;
 import io.github.firefang.power.login.LoginProperties;
-import io.github.firefang.power.login.session.ISessionAuthService;
 import io.github.firefang.power.login.test.PowerLoginTestConfiguration;
 
 /**
@@ -45,7 +45,7 @@ public class LoginAutoConfigurationSessionTest {
     private WebApplicationContext wac;
 
     @Autowired
-    private ISessionAuthService srv;
+    private IAuthService srv;
 
     private MockMvc mvc;
 
@@ -65,13 +65,13 @@ public class LoginAutoConfigurationSessionTest {
 
     @Test
     public void logout_Success() throws Exception {
-        MockHttpSession session = new MockHttpSession();
+        MockHttpServletRequest request = new MockHttpServletRequest();
+        MockHttpSession session = (MockHttpSession) request.getSession();
         session.setAttribute(KEY, "test");
         mvc.perform(post("/auth/logout").session(session)).andExpect(status().isOk())
                 .andExpect(content().json("{'code':200, 'message':'ok', 'data':null}"));
-        assertTrue(session.isInvalid());
         verify(srv).auth("test");
-        verify(srv).logout("test", session);
+        verify(srv).logout(Mockito.any());
     }
 
     @Test

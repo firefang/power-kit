@@ -1,8 +1,6 @@
 package io.github.firefang.power.login.autoconfigure;
 
-import java.util.function.Supplier;
-
-import javax.annotation.PostConstruct;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.AutoConfigureBefore;
@@ -14,18 +12,15 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.HandlerInterceptor;
+import org.springframework.web.servlet.config.annotation.InterceptorRegistration;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
+import io.github.firefang.power.login.AuthController;
 import io.github.firefang.power.login.IAuthService;
-import io.github.firefang.power.login.ILoginController;
 import io.github.firefang.power.login.LoginProperties;
 import io.github.firefang.power.login.LoginProperties.AuthType;
-import io.github.firefang.power.login.session.ISessionAuthService;
-import io.github.firefang.power.login.session.SessionController;
 import io.github.firefang.power.login.session.SessionHandlerInterceptor;
-import io.github.firefang.power.login.token.ITokenAuthService;
-import io.github.firefang.power.login.token.TokenController;
 import io.github.firefang.power.login.token.TokenHandlerInterceptor;
 
 /**
@@ -44,39 +39,13 @@ public class LoginAutoConfiguration implements WebMvcConfigurer {
     @Autowired
     private LoginProperties properties;
 
-    @Autowired(required = false)
-    private ITokenAuthService tokenSrv;
-
-    @Autowired(required = false)
-    private ISessionAuthService sessionSrv;
-
-    @PostConstruct
-    public void checkService() {
-        IAuthService authSrv;
-        Supplier<String> msg;
-
-        if (properties.getType() == AuthType.TOKEN) {
-            authSrv = tokenSrv;
-            msg = () -> "Can't find an ITokenAuthService";
-        } else {
-            authSrv = sessionSrv;
-            msg = () -> "Can't find an ISessionAuthService";
-        }
-        if (authSrv == null) {
-            throw new IllegalStateException(msg.get());
-        }
-    }
+    @Autowired
+    private IAuthService authSrv;
 
     @Bean
     @ConditionalOnProperty(value = LoginProperties.CONTROLLER_SWITCH, matchIfMissing = true)
-    public ILoginController loginController() {
-        AuthType type = properties.getType();
-        String key = getKey(type);
-        if (type == AuthType.TOKEN) {
-            return new TokenController(key, tokenSrv);
-        } else {
-            return new SessionController(key, sessionSrv);
-        }
+    public AuthController authController() {
+        return new AuthController(authSrv);
     }
 
     @Override
@@ -85,11 +54,16 @@ public class LoginAutoConfiguration implements WebMvcConfigurer {
         String key = getKey(type);
         HandlerInterceptor interceptor;
         if (type == AuthType.TOKEN) {
-            interceptor = new TokenHandlerInterceptor(key, tokenSrv);
+            interceptor = new TokenHandlerInterceptor(key, authSrv);
         } else {
-            interceptor = new SessionHandlerInterceptor(key, sessionSrv);
+            interceptor = new SessionHandlerInterceptor(key, authSrv);
         }
-        registry.addInterceptor(interceptor);
+        InterceptorRegistration reg = registry.addInterceptor(interceptor).addPathPatterns("/**");
+        Set<String> excludePaths = properties.getExcludePaths();
+        if (excludePaths != null && !excludePaths.isEmpty()) {
+            String[] eps = new String[excludePaths.size()];
+            reg.excludePathPatterns(excludePaths.toArray(eps));
+        }
     }
 
     private String getKey(AuthType type) {
