@@ -6,7 +6,7 @@
     <artifactId>power-kit</artifactId>
     <packaging>pom</packaging>
 
-    <version>0.0.3</version>
+    <version>0.0.4</version>
     <name>power-kit</name>
     <url>https://github.com/firefang</url>
     <description>a kit for web development</description>
@@ -80,6 +80,20 @@
             </distributionManagement>
             <build>
                 <plugins>
+                    <!-- mvn -P deploy -Dmaven.test.skip=true clean deploy -->
+                    <!-- manually release: mvn nexus-staging:release -->
+                    <!-- Drop staging repository: mvn nexus-staging:release -->
+                    <plugin>
+                        <groupId>org.sonatype.plugins</groupId>
+                        <artifactId>nexus-staging-maven-plugin</artifactId>
+                        <version>1.6.8</version>
+                        <extensions>true</extensions>
+                        <configuration>
+                            <serverId>ossrh</serverId>
+                            <nexusUrl>https://oss.sonatype.org/</nexusUrl>
+                            <autoReleaseAfterClose>true</autoReleaseAfterClose>
+                        </configuration>
+                    </plugin>
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-source-plugin</artifactId>
