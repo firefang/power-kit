@@ -40,6 +40,11 @@ public class PowerExceptionTestController {
         throw new NoPermissionException();
     }
 
+    @RequestMapping("/noperm-msg")
+    public void noPermMsg() {
+        throw new NoPermissionException("test");
+    }
+
     @RequestMapping("/business")
     public void business() {
         throw new BusinessException("test");

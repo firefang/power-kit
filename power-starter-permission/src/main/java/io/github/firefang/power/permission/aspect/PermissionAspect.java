@@ -115,24 +115,28 @@ public class PermissionAspect {
 
     private void verticalCheck(String permission, UserInfo info, Map<String, Object> params,
             Map<String, Object> extra) {
+        boolean hasPermission = false;
         try {
-            if (!checker.verticalCheck(permission, info, params, extra)) {
-                throw new NoPermissionException();
-            }
+            hasPermission = checker.verticalCheck(permission, info, params, extra);
         } catch (Exception e) {
             LOG.error("Check permission failed", e);
+            throw new NoPermissionException("检查权限失败");
+        }
+        if (!hasPermission) {
             throw new NoPermissionException();
         }
     }
 
     private void horizontalCheck(String permission, UserInfo info, Map<String, Object> params,
             Map<String, Object> extra) {
+        boolean hasPermission = false;
         try {
-            if (!checker.horizontalCheck(permission, info, params, extra)) {
-                throw new NoPermissionException();
-            }
+            hasPermission = checker.horizontalCheck(permission, info, params, extra);
         } catch (Exception e) {
             LOG.error("Check permission failed", e);
+            throw new NoPermissionException("检查权限失败");
+        }
+        if (!hasPermission) {
             throw new NoPermissionException();
         }
     }

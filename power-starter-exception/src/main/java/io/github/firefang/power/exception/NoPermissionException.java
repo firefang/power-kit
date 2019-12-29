@@ -9,4 +9,12 @@ package io.github.firefang.power.exception;
 public class NoPermissionException extends RuntimeException {
     private static final long serialVersionUID = -6659349365466202662L;
 
+    public NoPermissionException() {
+        super();
+    }
+
+    public NoPermissionException(String message) {
+        super(message);
+    }
+
 }

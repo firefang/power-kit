@@ -116,7 +116,8 @@ public class PermissionAspectTest {
         info.setRoleId(1);
         when(checker.getUserInfoFromRequest(any())).thenReturn(info);
         when(checker.verticalCheck(eq("testVertical"), eq(info), any(), any())).thenThrow(RuntimeException.class);
-        mvc.perform(get("/verticalCheck")).andExpect(status().isForbidden());
+        mvc.perform(get("/verticalCheck")).andExpect(status().isForbidden())
+                .andExpect(content().json("{'code':403,'message':'检查权限失败','data':null}", true));
         verify(checker).verticalCheck(eq("testVertical"), eq(info), any(), any());
     }
 
@@ -127,7 +128,8 @@ public class PermissionAspectTest {
         info.setRoleId(1);
         when(checker.getUserInfoFromRequest(any())).thenReturn(info);
         when(checker.verticalCheck(eq("testVertical"), eq(info), any(), any())).thenReturn(false);
-        mvc.perform(get("/verticalCheck")).andExpect(status().isForbidden());
+        mvc.perform(get("/verticalCheck")).andExpect(status().isForbidden())
+                .andExpect(content().json("{'code':403,'message':'无访问权限','data':null}", true));
         verify(checker).verticalCheck(eq("testVertical"), eq(info), any(), any());
     }
 
@@ -139,7 +141,8 @@ public class PermissionAspectTest {
         when(checker.getUserInfoFromRequest(any())).thenReturn(info);
         when(checker.verticalCheck(eq("testVertical"), eq(info), any(), any())).thenReturn(true);
         when(checker.horizontalCheck(eq("testHorizontal"), eq(info), any(), any())).thenThrow(RuntimeException.class);
-        mvc.perform(get("/horizontalCheck")).andExpect(status().isForbidden());
+        mvc.perform(get("/horizontalCheck")).andExpect(status().isForbidden())
+                .andExpect(content().json("{'code':403,'message':'检查权限失败','data':null}", true));
         verify(checker).horizontalCheck(eq("testHorizontal"), eq(info), any(), any());
     }
 
@@ -151,7 +154,8 @@ public class PermissionAspectTest {
         when(checker.getUserInfoFromRequest(any())).thenReturn(info);
         when(checker.verticalCheck(eq("testVertical"), eq(info), any(), any())).thenReturn(true);
         when(checker.horizontalCheck(eq("testHorizontal"), eq(info), any(), any())).thenReturn(false);
-        mvc.perform(get("/horizontalCheck")).andExpect(status().isForbidden());
+        mvc.perform(get("/horizontalCheck")).andExpect(status().isForbidden())
+                .andExpect(content().json("{'code':403,'message':'无访问权限','data':null}", true));
         verify(checker).horizontalCheck(eq("testHorizontal"), eq(info), any(), any());
     }
 
