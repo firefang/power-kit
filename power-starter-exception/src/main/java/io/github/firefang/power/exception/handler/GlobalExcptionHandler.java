@@ -54,7 +54,7 @@ public class GlobalExcptionHandler extends ResponseEntityExceptionHandler {
      * @return 响应信息
      */
     @ExceptionHandler(NoPermissionException.class)
-    public ResponseEntity<Void> handle(NoPermissionException ex) {
+    public ResponseEntity<CommonResponse<Void>> handle(NoPermissionException ex) {
         return ExceptionHandleUtil.handle(ex);
     }
 

@@ -34,8 +34,11 @@ public class ExceptionHandleUtil {
                 .body(CommonResponse.fail(CommonResponse.UNAUTHORIZED, ex.getMessage()));
     }
 
-    public static ResponseEntity<Void> handle(NoPermissionException ex) {
-        return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+    public static ResponseEntity<CommonResponse<Void>> handle(NoPermissionException ex) {
+        String msg = ex.getMessage();
+        msg = msg == null ? "无访问权限" : msg;
+        CommonResponse<Void> body = CommonResponse.fail(CommonResponse.FORBIDDEN, msg);
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(body);
     }
 
     public static ResponseEntity<CommonResponse<Void>> handle(BusinessException ex, Logger log) {

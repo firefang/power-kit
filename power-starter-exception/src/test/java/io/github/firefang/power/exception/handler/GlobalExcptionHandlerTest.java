@@ -44,7 +44,14 @@ public class GlobalExcptionHandlerTest {
 
     @Test
     public void noPerm() throws Exception {
-        mvc.perform(get("/noperm")).andExpect(status().isForbidden());
+        mvc.perform(get("/noperm")).andExpect(status().isForbidden())
+                .andExpect(content().json("{'code':403,'message':'无访问权限','data':null}", true));
+    }
+
+    @Test
+    public void noPermMsg() throws Exception {
+        mvc.perform(get("/noperm-msg")).andExpect(status().isForbidden())
+                .andExpect(content().json("{'code':403,'message':'test','data':null}", true));
     }
 
     @Test
