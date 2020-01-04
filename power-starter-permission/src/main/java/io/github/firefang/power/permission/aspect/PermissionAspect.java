@@ -2,9 +2,9 @@ package io.github.firefang.power.permission.aspect;
 
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.function.Supplier;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -20,10 +20,12 @@ import org.springframework.expression.ExpressionParser;
 import org.springframework.expression.spel.standard.SpelExpressionParser;
 import org.springframework.expression.spel.support.StandardEvaluationContext;
 
+import io.github.firefang.power.exception.BusinessException;
 import io.github.firefang.power.exception.NoPermissionException;
 import io.github.firefang.power.permission.IPermissionChecker;
 import io.github.firefang.power.permission.UserInfo;
 import io.github.firefang.power.permission.annotations.Permission;
+import io.github.firefang.power.permission.annotations.PermissionGroup;
 import io.github.firefang.power.permission.annotations.PermissionParam;
 import io.github.firefang.power.web.util.CurrentRequestUtil;
 
@@ -60,7 +62,7 @@ public class PermissionAspect {
         if (info != null) {
             String permission = anno.value();
             Map<String, Object> params = collectParams(pjp);
-            Map<String, Object> extra = collectExtraParams(anno.extraParams());
+            Map<String, Object> extra = collectExtraParams(pjp, anno.extraParams());
             if (anno.verticalCheck()) {
                 verticalCheck(permission, info, params, extra);
             }
@@ -96,11 +98,19 @@ public class PermissionAspect {
     }
 
     @SuppressWarnings("unchecked")
-    private Map<String, Object> collectExtraParams(String extraExp) {
-        if (extraExp.length() == 0) {
-            return Collections.emptyMap();
+    private Map<String, Object> collectExtraParams(ProceedingJoinPoint pjp, String extraExp) {
+        MethodSignature ms = (MethodSignature) pjp.getSignature();
+        Class<?> declaringType = ms.getDeclaringType();
+        PermissionGroup pg = declaringType.getAnnotation(PermissionGroup.class);
+        String classExtra = pg.extraParams();
+        Map<String, Object> ret = new HashMap<>(8);
+        if (classExtra.length() > 0) {
+            ret.putAll(evaluateExpression(classExtra, null, Map.class));
         }
-        return evaluateExpression(extraExp, null, Map.class);
+        if (extraExp.length() > 0) {
+            ret.putAll(evaluateExpression(extraExp, null, Map.class));
+        }
+        return ret;
     }
 
     private <T> T evaluateExpression(String expStr, Object paramVal, Class<T> clazz) {
@@ -115,23 +125,20 @@ public class PermissionAspect {
 
     private void verticalCheck(String permission, UserInfo info, Map<String, Object> params,
             Map<String, Object> extra) {
-        boolean hasPermission = false;
-        try {
-            hasPermission = checker.verticalCheck(permission, info, params, extra);
-        } catch (Exception e) {
-            LOG.error("Check permission failed", e);
-            throw new NoPermissionException("检查权限失败");
-        }
-        if (!hasPermission) {
-            throw new NoPermissionException();
-        }
+        check(() -> checker.verticalCheck(permission, info, params, extra));
     }
 
     private void horizontalCheck(String permission, UserInfo info, Map<String, Object> params,
             Map<String, Object> extra) {
+        check(() -> checker.horizontalCheck(permission, info, params, extra));
+    }
+
+    private void check(Supplier<Boolean> checker) {
         boolean hasPermission = false;
         try {
-            hasPermission = checker.horizontalCheck(permission, info, params, extra);
+            hasPermission = checker.get();
+        } catch (BusinessException e) {
+            throw e;
         } catch (Exception e) {
             LOG.error("Check permission failed", e);
             throw new NoPermissionException("检查权限失败");

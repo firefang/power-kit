@@ -14,6 +14,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.Map;
 
 import org.junit.Before;
@@ -28,6 +29,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
+import io.github.firefang.power.exception.BusinessException;
 import io.github.firefang.power.permission.IPermissionChecker;
 import io.github.firefang.power.permission.UserInfo;
 import io.github.firefang.power.permission.test.PowerPermissionConfiguration;
@@ -72,7 +74,7 @@ public class PermissionAspectTest {
     }
 
     @Test
-    public void checkPerm_Success() throws Exception {
+    public void checkPermission_Success() throws Exception {
         UserInfo info = new UserInfo();
         info.setUserId(1);
         info.setRoleId(1);
@@ -84,7 +86,7 @@ public class PermissionAspectTest {
     }
 
     @Test
-    public void checkPerm_Params_Success() throws Exception {
+    public void checkPermission_MethodExtraParams_Success() throws Exception {
         UserInfo info = new UserInfo();
         info.setUserId(1);
         info.setRoleId(1);
@@ -96,7 +98,21 @@ public class PermissionAspectTest {
     }
 
     @Test
-    public void checkPerm_ParamsExp_Success() throws Exception {
+    public void checkPermission_ClassExtraParam_Success() throws Exception {
+        UserInfo info = new UserInfo();
+        info.setUserId(1);
+        info.setRoleId(1);
+        when(checker.getUserInfoFromRequest(any())).thenReturn(info);
+        Map<String, Object> params = new HashMap<>();
+        params.put("class", true);
+        params.put("method", true);
+        when(checker.verticalCheck(eq("classParam"), eq(info), any(), eq(params))).thenReturn(true);
+        when(checker.horizontalCheck(eq("classParam"), eq(info), any(), eq(params))).thenReturn(true);
+        mvc.perform(get("/classParam")).andExpect(status().isOk());
+    }
+
+    @Test
+    public void checkPermission_ParamsExp_Success() throws Exception {
         UserInfo info = new UserInfo();
         info.setUserId(1);
         info.setRoleId(1);
@@ -107,6 +123,19 @@ public class PermissionAspectTest {
         mvc.perform(
                 post("/checkExp").contentType(MediaType.APPLICATION_JSON_UTF8).content("{\"id\":1, \"name\":\"a\"}"))
                 .andExpect(status().isOk()).andExpect(content().string("a"));
+    }
+
+    @Test
+    public void checkPermission_VerticalBusinessException_Forbidden() throws Exception {
+        UserInfo info = new UserInfo();
+        info.setUserId(1);
+        info.setRoleId(1);
+        when(checker.getUserInfoFromRequest(any())).thenReturn(info);
+        when(checker.verticalCheck(eq("testVertical"), eq(info), any(), any()))
+                .thenThrow(new BusinessException("test"));
+        mvc.perform(get("/verticalCheck")).andExpect(status().isOk())
+                .andExpect(content().json("{'code':600,'message':'操作失败, test','data':null}", true));
+        verify(checker).verticalCheck(eq("testVertical"), eq(info), any(), any());
     }
 
     @Test
@@ -131,6 +160,20 @@ public class PermissionAspectTest {
         mvc.perform(get("/verticalCheck")).andExpect(status().isForbidden())
                 .andExpect(content().json("{'code':403,'message':'无访问权限','data':null}", true));
         verify(checker).verticalCheck(eq("testVertical"), eq(info), any(), any());
+    }
+
+    @Test
+    public void checkPermission_HorizontalBusinessException_Fail() throws Exception {
+        UserInfo info = new UserInfo();
+        info.setUserId(1);
+        info.setRoleId(1);
+        when(checker.getUserInfoFromRequest(any())).thenReturn(info);
+        when(checker.verticalCheck(eq("testVertical"), eq(info), any(), any())).thenReturn(true);
+        when(checker.horizontalCheck(eq("testHorizontal"), eq(info), any(), any()))
+                .thenThrow(new BusinessException("test"));
+        mvc.perform(get("/horizontalCheck")).andExpect(status().isOk())
+                .andExpect(content().json("{'code':600,'message':'操作失败, test','data':null}", true));
+        verify(checker).horizontalCheck(eq("testHorizontal"), eq(info), any(), any());
     }
 
     @Test
