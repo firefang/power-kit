@@ -21,4 +21,11 @@ public @interface PermissionGroup {
      * @return 分组名
      */
     String value();
+
+    /**
+     * 额外参数，需使用SpringEL返回Map类型，key为参数名，value为参数值
+     * 
+     * @return
+     */
+    String extraParams() default "";
 }

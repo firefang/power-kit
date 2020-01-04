@@ -44,10 +44,14 @@ public class ListenerAutoConfigurationTest {
             }
         }
         assertTrue(invoked);
-        assertEquals(6, ps.size());
+        assertEquals(7, ps.size());
         for (PermissionDO p : ps) {
-            assertTrue(names.contains(p.getName()));
-            assertEquals("test", p.getGroup());
+            if ("classParam".equals(p.getGroup())) {
+                assertEquals("classParam", p.getName());
+            } else {
+                assertTrue(names.contains(p.getName()));
+                assertEquals("test", p.getGroup());
+            }
         }
     }
 
